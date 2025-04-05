@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Movie Recommender</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans p-8 transition duration-300">
+  <div class="max-w-5xl mx-auto">
+
+    <h1 class="text-3xl font-bold mb-6 text-center">🎬 AI Movie Recommender 🎬</h1>
+
+    <!-- tabs -->
+    <div class="mb-6 flex gap-4 justify-center">
+      <a href="/" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition">Recommended</a>
+      <a href="/popular" class="px-4 py-2 rounded bg-gray-700 text-gray-300 hover:bg-gray-600 transition">Popular</a>
+      <a href="/trending" class="px-4 py-2 rounded bg-gray-700 text-gray-300 hover:bg-gray-600 transition">Trending</a>
+    </div>
+
+    <!-- search form -->
+    <form method="POST" class="flex gap-4 justify-center mb-8">
+      <input
+        type="text"
+        name="prompt"
+        placeholder="What do you feel like watching?"
+        value="{{ query }}"
+        class="w-full max-w-md px-4 py-2 rounded border border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-800 text-gray-200"
+      >
+      <button
+        type="submit"
+        class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+      >
+        Recommend
+      </button>
+    </form>
+
+    <!-- movie results -->
+    {% if tab == 'Recommended' %}
+      <h2 class="text-2xl font-semibold mb-4">Results:</h2>
+    {% elif tab == 'Trending' %}
+      <h2 class="text-2xl font-semibold mb-4">Trending Movies</h2>
+    {% elif tab == 'Popular' %}
+      <h2 class="text-2xl font-semibold mb-4">Popular Movies</h2>
+    {% endif %}
+
+    <div class="space-y-6">
+      {% for movie in movies %}
+        <div class="bg-gray-800 rounded-lg shadow-md p-4 flex gap-4">
+          {% if movie.poster_url %}
+            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="w-36 h-auto rounded">
+          {% endif %}
+          <div>
+            <h3 class="text-xl font-semibold">
+              <a href="{{ movie.tmdb_link }}" target="_blank" class="text-blue-400 hover:underline">
+                {{ movie.title }}
+              </a>
+              {% if movie.release_date %}
+                <span class="text-gray-400"> ({{ movie.release_date[:4] }})</span>
+              {% endif %}
+            </h3>
+            <p class="text-sm text-gray-400 mt-1">{{ movie.genre }}</p>
+            <p class="text-sm text-gray-300 mt-1">Cast: {{ movie.cast }}</p>
+            <p class="mt-2 text-gray-200 text-sm">{{ movie.overview }}</p>
+            {% if movie.rating %}
+              <p class="mt-2 text-yellow-400 text-sm">Rating: {{ movie.rating }} / 10</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</body>
+</html>
